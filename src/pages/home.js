@@ -1,13 +1,40 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import axios from 'axios';
+//MUI
+import Grid from '@material-ui/core/Grid';
+
+//component
+import Post from '../components/Post';
 
 export class home extends Component {
+    state = {
+        posts: null
+    };
+    componentDidMount() {
+        axios
+            .get('/posts')
+            .then((response) => {
+                console.log(response.data)
+                this.setState({
+                    posts: response.data
+                });
+            })
+            .catch((err) => console.log(err));
+    };
     render() {
+        let recentPostsMarkup = this.state.posts ? (
+            this.state.posts.map((post) => <Post key={post.postId} post={post}></Post>)) : <p>Loading...</p>
         return (
-            <div>
-                <h1>this is home page</h1>
-            </div>
+            <Grid container spacing={10}>
+                <Grid item sm={8} xs={12}>
+                    {recentPostsMarkup}
+                </Grid>
+                <Grid item sm={4} xs={12}>
+                    <p>Profile...</p>
+                </Grid>
+            </Grid>
         )
     }
 }
 
-export default home
+export default home;
