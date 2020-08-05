@@ -2,7 +2,9 @@ import {
     SET_USER,
     SET_ERRORS,
     CLEAR_ERRORS,
-    LOADING_UI
+    LOADING_UI,
+    SET_UNAUTHENTICATED,
+    LOADING_USER
 } from '../types';
 import axios from 'axios';
 
@@ -12,9 +14,7 @@ export const loginUser = (userData, history) => (dispatch) => {
         .post('/login', userData)
         .then((response) => {
             console.log(response.data);
-            const FBIdToken = `Bearer ${response.data.token}`;
-            localStorage.setItem('FBIdToken', FBIdToken);
-            axios.defaults.headers.common['Authorization'] = FBIdToken;
+            setAuthorizationHeader(response.data.token);
             dispatch(getUserData());
             dispatch({ type: CLEAR_ERRORS });
             history.push('/');
@@ -27,9 +27,35 @@ export const loginUser = (userData, history) => (dispatch) => {
         });
 };
 
-export const getUserData = () => (dispatch) => {
+export const signupUser = (newUserData, history) => (dispatch) => {
+    dispatch({ type: LOADING_UI });
     axios
-        .get('/user')
+        .post('/signup', newUserData)
+        .then((response) => {
+            console.log(response.data);
+            setAuthorizationHeader(response.data.token);
+            dispatch(getUserData());
+            dispatch({ type: CLEAR_ERRORS });
+            history.push('/');
+        })
+        .catch((err) => {
+            dispatch({
+                type: SET_ERRORS,
+                payload: err.response.data
+            })
+        });
+};
+
+export const logoutUser = () => (dispatch) => {
+    localStorage.removeItem('FBIdToken');
+    delete axios.defaults.headers.common['Authorization'];
+    dispatch({ type: SET_UNAUTHENTICATED });
+};
+
+export const getUserData = () => (dispatch) => {
+    dispatch({ type: LOADING_USER });
+    axios
+        .get('/user/authenticated')
         .then((response) => {
             dispatch({
                 type: SET_USER,
@@ -39,4 +65,34 @@ export const getUserData = () => (dispatch) => {
         .catch((err) => {
             console.log(err);
         });
+};
+
+export const uploadImage = (formData) => (dispatch) => {
+    dispatch({ type: LOADING_USER });
+    axios
+        .post('/user/image', formData)
+        .then(() => {
+            dispatch(getUserData());
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
+};
+
+export const editUserDetails = (userDetails) => (dispatch) => {
+    dispatch({ type: LOADING_USER });
+    axios
+        .post('/users/details', userDetails)
+        .then(() => {
+            dispatch(getUserData());
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+const setAuthorizationHeader = (token) => {
+    const FBIdToken = `Bearer ${token}`;
+    localStorage.setItem('FBIdToken', FBIdToken);
+    axios.defaults.headers.common['Authorization'] = FBIdToken;
 };

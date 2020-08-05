@@ -26,7 +26,14 @@ class login extends Component {
             errors: {}
         };
     };
-
+    static getDerivedStateFromProps(props, nextState) {
+        if (props.ui.errors) {
+            return {
+                errors: props.ui.errors
+            }
+        }
+        return null;
+    };
     handleSubmit = (event) => {
         event.preventDefault();
 
@@ -42,8 +49,8 @@ class login extends Component {
         });
     };
     render() {
-        const { classes } = this.props;
-        const { errors, loading } = this.state;
+        const { classes, ui: { loading } } = this.props;
+        const { errors } = this.state;
         return (
             <Grid container className={classes.form}>
                 <Grid item sm />
@@ -58,6 +65,7 @@ class login extends Component {
                             name="email"
                             type="email"
                             label="Email"
+                            autoComplete="off"
                             className={classes.textField}
                             helperText={errors.email}
                             error={errors.email ? true : false}
@@ -70,6 +78,7 @@ class login extends Component {
                             name="password"
                             type="password"
                             label="Password"
+                            autoComplete="off"
                             className={classes.textField}
                             helperText={errors.password}
                             error={errors.password ? true : false}
@@ -102,12 +111,16 @@ class login extends Component {
 };
 
 login.propTypes = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    loginUser: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    ui: PropTypes.object.isRequired
 };
 const mapStateToProps = (state) => ({
-    
+    user: state.user,
+    ui: state.ui
 });
 const mapDispatchToProps = {
-    
+    loginUser
 };
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(login));
