@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
-import MyButton from "../util/MyButton";
-// import LikeButton from './LikeButton';
-// import Comments from './Comments';
-// import CommentForm from './CommentForm';
+import MyButton from "../../util/MyButton";
+import LikeButton from "./LikeButton";
+import Comments from './Comments';
+import CommentForm from './CommentForm';
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 // MUI Stuff
@@ -19,7 +19,7 @@ import UnfoldMore from "@material-ui/icons/UnfoldMore";
 import ChatIcon from "@material-ui/icons/Chat";
 // Redux stuff
 import { connect } from "react-redux";
-import { getPost, clearErrors } from "../redux/actions/dataActions";
+import { getPost, clearErrors } from "../../redux/actions/dataActions";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -70,6 +70,7 @@ class PostDialog extends Component {
 
     this.setState({ open: true, oldPath, newPath });
     this.props.getPost(this.props.postId);
+    console.log(this.props.postId);
   };
   handleClose = () => {
     window.history.pushState(null, null, this.state.oldPath);
@@ -96,7 +97,7 @@ class PostDialog extends Component {
         <CircularProgress size={200} thickness={2} />
       </div>
     ) : (
-      <Grid container spacing={16}>
+      <Grid container spacing={10}>
         <Grid item sm={5}>
           <img src={userImage} alt="Profile" className={classes.profileImage} />
         </Grid>
@@ -115,7 +116,7 @@ class PostDialog extends Component {
           </Typography>
           <hr className={classes.invisibleSeparator} />
           <Typography variant="body1">{body}</Typography>
-          {/* <LikeButton postId={postId} /> */}
+          <LikeButton postId={postId} />
           <span>{likeCount} likes</span>
           <MyButton tip="comments">
             <ChatIcon color="primary" />
@@ -123,8 +124,8 @@ class PostDialog extends Component {
           <span>{commentCount} comments</span>
         </Grid>
         <hr className={classes.visibleSeparator} />
-        {/* <CommentForm postId={postId} /> */}
-        {/* <Comments comments={comments} /> */}
+        <CommentForm postId={postId} />
+        <Comments comments={comments} />
       </Grid>
     );
     return (

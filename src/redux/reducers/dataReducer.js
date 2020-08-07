@@ -1,6 +1,7 @@
 import {
   SET_POSTS,
   LOADING_DATA,
+  SUBMIT_COMMENT,
   LIKE_POST,
   UNLIKE_POST,
   DELETE_POST,
@@ -26,7 +27,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         posts: action.payload,
-        lading: false,
+        loading: false,
       };
     case SET_POST:
       return {
@@ -39,6 +40,9 @@ export default function (state = initialState, action) {
         (post) => post.postId === action.payload.postId
       );
       state.posts[index] = action.payload;
+      if (state.post.postId === action.payload.postId) {
+        state.post = action.payload;
+      }
       return { ...state };
     case DELETE_POST:
       index = state.posts.findIndex((post) => post.postId === action.payload);
@@ -48,6 +52,14 @@ export default function (state = initialState, action) {
       return {
         ...state,
         posts: [action.payload, ...state.posts],
+      };
+    case SUBMIT_COMMENT:
+      return {
+        ...state,
+        post: {
+          ...state.post,
+          comments: [action.payload, ...state.post.comments],
+        },
       };
     default:
       return state;
