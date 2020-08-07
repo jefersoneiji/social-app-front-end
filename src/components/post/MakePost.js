@@ -38,14 +38,11 @@ class MakePost extends Component {
     errors: {},
   };
   // TODO: change this component life cycle (about to be deprecated)
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.ui.errors) {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.ui.errors !== this.props.ui.errors) {
       this.setState({
-        errors: nextProps.ui.errors,
+        errors: this.props.ui.errors,
       });
-    }
-    if (!nextProps.ui.errors && !nextProps.ui.loading) {
-      this.setState({ body: "", open: false, errors: {} });
     }
   }
   handleOpen = () => {
@@ -60,6 +57,7 @@ class MakePost extends Component {
   };
   handleSubmit = (event) => {
     event.preventDefault();
+    this.form.reset();
     this.props.makePost({ body: this.state.body });
   };
   render() {
@@ -88,7 +86,10 @@ class MakePost extends Component {
           </MyButton>
           <DialogTitle>Do a new post </DialogTitle>
           <DialogContent>
-            <form onSubmit={this.handleSubmit}>
+            <form
+              onSubmit={this.handleSubmit}
+              ref={(form) => (this.form = form)}
+            >
               <TextField
                 name="body"
                 body="text"

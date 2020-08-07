@@ -19,12 +19,9 @@ class CommentForm extends Component {
     errors: {},
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.ui.errors) {
-      this.setState({ errors: nextProps.ui.errors });
-    }
-    if (!nextProps.ui.errors && !nextProps.ui.loading) {
-      this.setState({ body: "" });
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.ui.errors !== prevProps.ui.errors) {
+      this.setState({ errors: this.props.ui.errors });
     }
   }
 
@@ -33,6 +30,7 @@ class CommentForm extends Component {
   };
   handleSubmit = (event) => {
     event.preventDefault();
+    this.setState({ body: " " });
     this.props.submitComment(this.props.postId, { body: this.state.body });
   };
 
