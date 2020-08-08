@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
 import MyButton from "../../util/MyButton";
 import LikeButton from "./LikeButton";
-import Comments from './Comments';
-import CommentForm from './CommentForm';
+import Comments from "./Comments";
+import CommentForm from "./CommentForm";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 // MUI Stuff
@@ -97,7 +97,7 @@ class PostDialog extends Component {
         <CircularProgress size={200} thickness={2} />
       </div>
     ) : (
-      <Grid container >
+      <Grid container>
         <Grid item sm={5}>
           <img src={userImage} alt="Profile" className={classes.profileImage} />
         </Grid>
@@ -130,9 +130,12 @@ class PostDialog extends Component {
     );
     return (
       <Fragment>
+        <MyButton onClick={this.handleOpen} tip="comments">
+          <ChatIcon color="primary" />
+        </MyButton>
         <MyButton
           onClick={this.handleOpen}
-          tip="Expand scream"
+          tip="Expand post"
           tipClassName={classes.expandButton}
         >
           <UnfoldMore color="primary" />

@@ -16,12 +16,10 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 
-//icons
-import ChatIcon from "@material-ui/icons/Chat";
+
 //redux
 import { connect } from "react-redux";
-import MyButton from "../../util/MyButton";
-import  LikeButton  from "./LikeButton";
+import LikeButton from "./LikeButton";
 
 const styles = {
   card: {
@@ -38,7 +36,6 @@ const styles = {
   },
 };
 class Post extends Component {
-  
   render() {
     dayjs.extend(relativeTime);
     const {
@@ -83,13 +80,14 @@ class Post extends Component {
             {dayjs(createdAt).fromNow()}
           </Typography>
           <Typography variant="body1">{body}</Typography>
-          <LikeButton postId={postId}/>
+          <LikeButton postId={postId} />
           <span>{likeCount} Likes</span>
-          <MyButton tip="comments">
-            <ChatIcon color="primary" />
-          </MyButton>
+            <PostDialog
+              postId={postId}
+              userHandle={userHandle}
+              openDialog={this.props.openDialog}
+            />
           <span>{commentCount} comments</span>
-          <PostDialog postId={postId} userHandle={userHandle} openDialog={this.props.openDialog}/>
         </CardContent>
       </Card>
     );
@@ -99,7 +97,7 @@ Post.propTypes = {
   user: PropTypes.object.isRequired,
   post: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  openDialog: PropTypes.bool
+  openDialog: PropTypes.bool,
 };
 const mapStateToProps = (state) => ({
   user: state.user,
